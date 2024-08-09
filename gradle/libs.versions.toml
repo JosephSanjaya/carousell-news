@@ -74,11 +74,13 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 ktor-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor"  }
-ktor-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor"  }
 ktor-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
+ktor-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-kotlin-serialization = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 ktorfit = { module = "de.jensklingenberg.ktorfit:ktorfit-lib", version.ref = "ktorfit" }
 
 hilt = { module = "com.google.dagger:hilt-android", version.ref = "dagger" }
+hilt-compose = { module = "androidx.hilt:hilt-navigation-compose", version = "1.0.0" }
 hilt-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "dagger" }
 
 [plugins]

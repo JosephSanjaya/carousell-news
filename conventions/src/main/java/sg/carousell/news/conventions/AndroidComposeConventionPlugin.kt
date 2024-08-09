@@ -42,6 +42,7 @@ class AndroidComposeConventionPlugin : Plugin<Project> {
         findLibs("compose-bom")?.let { implementationPlatformWithLog(it) }
         findLibs("compose-bom")?.let { androidTestImplementationPlatformWithLog(it) }
         findLibs("compose-activity")?.let { implementationWithLog(it) }
+        findLibs("hilt-compose")?.let { implementationWithLog(it) }
         findLibs("compose-ui")?.let { implementationWithLog(it) }
         findLibs("compose-material")?.let { implementationWithLog(it) }
         findLibs("compose-ui-graphics")?.let { implementationWithLog(it) }

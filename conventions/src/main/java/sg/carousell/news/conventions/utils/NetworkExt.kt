@@ -9,7 +9,8 @@ fun Project.applyNetwork() {
         findLibs("chucker")?.let { add("debugImplementation", it) }
         findLibs("chucker-no-op")?.let { add("releaseImplementation", it) }
         findLibs("ktor-core")?.let { add("implementation", it) }
-        findLibs("ktor-cio")?.let { add("implementation", it) }
+        findLibs("ktor-content-negotiation")?.let { add("implementation", it) }
+        findLibs("ktor-kotlin-serialization")?.let { add("implementation", it) }
         findLibs("ktor-okhttp")?.let { add("implementation", it) }
         findLibs("ktor")?.let { add("implementation", it) }
         findLibs("ktorfit")?.let { add("implementation", it) }
