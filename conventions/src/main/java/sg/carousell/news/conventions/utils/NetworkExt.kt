@@ -1,6 +1,7 @@
 package sg.carousell.news.conventions.utils
 
 import org.gradle.api.Project
+import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.dependencies
 
 fun Project.applyNetwork() {
@@ -10,5 +11,7 @@ fun Project.applyNetwork() {
         findLibs("ktor-core")?.let { add("implementation", it) }
         findLibs("ktor-cio")?.let { add("implementation", it) }
         findLibs("ktor-okhttp")?.let { add("implementation", it) }
+        findLibs("ktor")?.let { add("implementation", it) }
+        findLibs("ktorfit")?.let { add("implementation", it) }
     }
 }

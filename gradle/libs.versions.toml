@@ -27,6 +27,7 @@ appcompat = "1.7.0"
 material = "1.12.0"
 chucker = "4.0.0"
 dagger = "2.52"
+ktorfit = "2.0.0"
 
 [libraries]
 androidx-desugar = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar" }
@@ -75,6 +76,7 @@ material = { group = "com.google.android.material", name = "material", version.r
 ktor-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor"  }
 ktor-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor"  }
 ktor-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
+ktorfit = { module = "de.jensklingenberg.ktorfit:ktorfit-lib", version.ref = "ktorfit" }
 
 hilt = { module = "com.google.dagger:hilt-android", version.ref = "dagger" }
 hilt-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "dagger" }
@@ -84,6 +86,7 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+ktorfit = { id = "de.jensklingenberg.ktorfit", version.ref = "ktorfit" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }

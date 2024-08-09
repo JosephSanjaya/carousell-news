@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "Carousell News"
-include(":app")
+include(":app", ":core", ":features:news")
