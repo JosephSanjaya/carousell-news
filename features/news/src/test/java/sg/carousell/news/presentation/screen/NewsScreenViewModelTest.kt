@@ -11,11 +11,11 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
-import sg.carousell.news.domain.model.NewsDomain
 import sg.carousell.news.domain.usecase.FetchNewsUseCase
 import sg.carousell.news.presentation.model.NewsSortType
 import sg.carousell.news.presentation.model.NewsUiEvent
 import sg.carousell.news.presentation.model.NewsUiState
+import sg.carousell.news.utils.mockListNewsDomain
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class NewsScreenViewModelTest : FunSpec({
@@ -29,8 +29,7 @@ class NewsScreenViewModelTest : FunSpec({
         viewModel = NewsScreenViewModel(useCase, testDispatcher)
     }
 
-    afterTest {
-        Dispatchers.resetMain()
+    afterTest {Dispatchers.resetMain()
         unmockkAll()
     }
 
@@ -38,109 +37,63 @@ class NewsScreenViewModelTest : FunSpec({
         viewModel.uiState.value shouldBe NewsUiState()
     }
 
-    test("fetching news should update state correctly") {
-        val mockNews = listOf(
-            NewsDomain(
-                bannerUrl = "https://duckduckgo.com/?q=veri",
-                description = "tritani",
-                id = "te",
-                rank = 1,
-                timeCreated = 1000L,
-                title = "News 1"
-            ),
-            NewsDomain(
-                bannerUrl = "https://duckduckgo.com/?q=veri",
-                description = "tritani",
-                id = "te",
-                rank = 2,
-                timeCreated = 2000L,
-                title = "News 2"
+    suspend fun testUiState(event: NewsUiEvent, expectedState: NewsUiState) {
+        viewModel.uiEvent.test {
+            viewModel.onEvent(event)
+            viewModel.uiState.test {
+                awaitItem() shouldBe expectedState
+            }
+            cancelAndConsumeRemainingEvents()
+        }
+    }
+
+    test("OnFetchNews event should fetch news then update state") {
+        val mockNews = mockListNewsDomain()
+        coEvery { useCase.invoke() } returns mockNews
+        testUiState(
+            NewsUiEvent.OnFetchNews,
+            NewsUiState(isLoading = false, data = mockNews)
+        )
+    }
+
+    test("ShowSortOption should update state to show sort options") {
+        testUiState(
+            NewsUiEvent.ShowSortOption,
+            NewsUiState(isShowSortDialog = true)
+        )
+    }
+
+    test("OnSortOptionDismiss event should dismiss sort options") {
+        viewModel.onEvent(NewsUiEvent.ShowSortOption)
+        testUiState(
+            NewsUiEvent.OnSortOptionDismiss,
+            NewsUiState(isShowSortDialog = false)
+        )
+    }
+
+    test("OnSortOptionSelect event should update state and refetch news") {
+        val mockNews = mockListNewsDomain()
+        coEvery { useCase.invoke() } returns mockNews
+        testUiState(
+            NewsUiEvent.OnSortOptionSelect(NewsSortType.POPULAR),
+            NewsUiState(
+                sortType = NewsSortType.POPULAR,
+                isLoading = false,
+                data = mockNews.sortedBy { it.rank.toLong() }
             )
         )
-        coEvery { useCase.invoke() } returns mockNews
-
-        viewModel.uiEvent.test {
-            viewModel.onEvent(NewsUiEvent.OnFetchNews)
-            viewModel.uiState.test {
-                awaitItem() shouldBe NewsUiState(isLoading = false, data = mockNews)
-            }
-            cancelAndConsumeRemainingEvents()
-        }
     }
 
-    test("showing sort options should update state") {
-        viewModel.uiEvent.test {
-            viewModel.onEvent(NewsUiEvent.ShowSortOption)
-            viewModel.uiState.test {
-                awaitItem() shouldBe NewsUiState(isShowSortDialog = true)
-            }
-            cancelAndConsumeRemainingEvents()
-        }
-    }
-
-    test("dismissing sort options should update state") {
-        viewModel.uiEvent.test {
-            viewModel.onEvent(NewsUiEvent.ShowSortOption)
-            viewModel.uiState.test {
-                awaitItem() shouldBe NewsUiState(isShowSortDialog = true)
-            }
-            viewModel.onEvent(NewsUiEvent.OnSortOptionDismiss)
-            viewModel.uiState.test {
-                awaitItem() shouldBe NewsUiState(isShowSortDialog = false)
-            }
-            cancelAndConsumeRemainingEvents()
-        }
-    }
-
-    test("selecting sort option should update state and fetch news") {
-        val mockNews = listOf(
-            NewsDomain(
-                bannerUrl = "https://duckduckgo.com/?q=veri",
-                description = "tritani",
-                id = "te",
-                rank = 1,
-                timeCreated = 1000L,
-                title = "News 1"
-            ),
-            NewsDomain(
-                bannerUrl = "https://duckduckgo.com/?q=veri",
-                description = "tritani",
-                id = "te",
-                rank = 2,
-                timeCreated = 2000L,
-                title = "News 2"
-            )
-        )
-        coEvery { useCase.invoke() } returns mockNews
-
-        viewModel.uiEvent.test {
-            viewModel.onEvent(NewsUiEvent.OnSortOptionSelect(NewsSortType.POPULAR))
-            viewModel.uiState.test {
-                awaitItem() shouldBe NewsUiState(
-                    sortType = NewsSortType.POPULAR,
-                    isLoading = false,
-                    data = mockNews.sortedBy { it.rank.toLong() }
-                )
-            }
-            cancelAndConsumeRemainingEvents()
-        }
-    }
-
-    test("error during news fetch should update state") {
+    test("Error during OnFetchNews event should update state to show error") {
         val errorMessage = "Error fetching news"
-        val exception = Throwable(errorMessage)
-        coEvery { useCase.invoke() } throws exception
-
-        viewModel.uiEvent.test {
-            viewModel.onEvent(NewsUiEvent.OnFetchNews)
-            viewModel.uiState.test {
-                awaitItem() shouldBe NewsUiState(isLoading = false, error = errorMessage)
-            }
-            cancelAndConsumeRemainingEvents()
-        }
+        coEvery { useCase.invoke() } throws Throwable(errorMessage)
+        testUiState(
+            NewsUiEvent.OnFetchNews,
+            NewsUiState(isLoading = false, error = errorMessage)
+        )
     }
 
-    test("uiEvent flow should emit events") {
+    test("onEvent method should emit events") {
         viewModel.uiEvent.test {
             viewModel.onEvent(NewsUiEvent.ShowSortOption)
             awaitItem() shouldBe NewsUiEvent.ShowSortOption

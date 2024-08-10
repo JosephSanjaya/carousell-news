@@ -7,7 +7,7 @@ import java.time.temporal.ChronoUnit
 
 class DateUtils {
     companion object {
-        fun getRelativeTimeString(timestamp: Long): String {
+        fun getRelativeTime(timestamp: Long): String {
             val now = LocalDateTime.now()
             val dateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(timestamp), ZoneId.systemDefault())
             val days = ChronoUnit.DAYS.between(dateTime, now)

@@ -5,23 +5,15 @@ import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
 import io.mockk.mockk
 import sg.carousell.news.data.NewsRepo
-import sg.carousell.news.data.model.NewsData
-import sg.carousell.news.data.web.NewsWebApi
 import sg.carousell.news.domain.model.NewsDomain
+import sg.carousell.news.utils.mockNewsData
 
 class FetchNewsUseCaseTest : FunSpec({
 
     val repo = mockk<NewsRepo>()
     val useCase = FetchNewsUseCase(repo)
     val mockkNews = listOf(
-        NewsData(
-            bannerUrl = "test",
-            description = "test",
-            id = "test",
-            rank = 1,
-            timeCreated = 1,
-            title = "test",
-        )
+        mockNewsData()
     )
 
     beforeTest {
@@ -29,7 +21,7 @@ class FetchNewsUseCaseTest : FunSpec({
     }
 
 
-    test("getNews should return news from the API") {
+    test("invocation should return news from the repo and map it into news domain") {
         val result = useCase()
         result shouldBe mockkNews.map(::NewsDomain)
     }
