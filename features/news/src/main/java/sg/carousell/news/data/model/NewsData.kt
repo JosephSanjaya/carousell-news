@@ -17,7 +17,7 @@ data class NewsData(
     @SerialName("rank")
     val rank: Int?,
     @SerialName("time_created")
-    val timeCreated: Int?,
+    val timeCreated: Long?,
     @SerialName("title")
     val title: String?
 )

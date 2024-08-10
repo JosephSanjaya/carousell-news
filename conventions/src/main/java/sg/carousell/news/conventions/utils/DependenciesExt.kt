@@ -59,6 +59,18 @@ fun Project.testDependencies() {
         findLibs("junit")?.also { testImplementationWithLog(it) }
         findLibs("androidx-junit")?.also { androidTestImplementationWithLog(it) }
         findLibs("androidx-espresso-core")?.also { androidTestImplementationWithLog(it) }
+        findLibs("mockk")?.also {
+            testImplementationWithLog(it)
+            androidTestImplementationWithLog(it)
+        }
+        findLibs("kotest")?.also {
+            testImplementationWithLog(it)
+            androidTestImplementationWithLog(it)
+        }
+        findLibs("turbine")?.also {
+            testImplementationWithLog(it)
+            androidTestImplementationWithLog(it)
+        }
     }
 }
 

@@ -7,6 +7,8 @@ import sg.carousell.news.conventions.utils.applyPluginsWithLog
 import sg.carousell.news.conventions.utils.testDependencies
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.tasks.testing.Test
+import org.gradle.kotlin.dsl.withType
 import sg.carousell.news.conventions.utils.applyHilt
 
 class AndroidAppConventionPlugin : Plugin<Project> {
@@ -20,6 +22,9 @@ class AndroidAppConventionPlugin : Plugin<Project> {
                 applyNetwork()
                 applyPluginsWithLog("sg.carousell.news.conventions.target")
                 testDependencies()
+            }
+            tasks.withType<Test>().configureEach {
+                useJUnitPlatform()
             }
         }
     }
