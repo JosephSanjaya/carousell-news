@@ -26,9 +26,9 @@ The project is organized into the following modules:
 
 ### Prerequisites
 
-- Android Studio Koala
+- Android Studio Koala Patch 2
 - Kotlin 2.0
-- Gradle 8.9
+- Gradle 8.10
 - Java 21
 
 ### Installation
